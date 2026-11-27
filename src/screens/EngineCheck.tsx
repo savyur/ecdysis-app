@@ -27,6 +27,17 @@ function usePersist<T>(key: string, init: T) {
   return [v, setV] as const;
 }
 
+/** Поле числа: можно стереть целиком; при уходе из поля значение приводится к границам. */
+function NumField({ value, min, max, onChange }: { value: number; min: number; max: number; onChange: (v: number) => void }) {
+  const [text, setText] = useState(String(value));
+  useEffect(() => { setText(t => (t === '' || +t === value ? t : String(value))); }, [value]);
+  return (
+    <input className="input sans-value" type="text" inputMode="numeric" value={text}
+      onChange={e => { const t = e.target.value.replace(/\D/g, '').slice(0, 3); setText(t); if (t !== '') onChange(Math.min(max, +t)); }}
+      onBlur={() => { const v = Math.max(min, Math.min(max, text === '' ? min : +text)); setText(String(v)); onChange(v); }} />
+  );
+}
+
 const startAspects = () => Object.fromEntries(ASPECT_IDS.map(id => [id, { base: 3, cur: 3 }])) as Aspects;
 
 export function EngineCheck() {
@@ -69,8 +80,7 @@ export function EngineCheck() {
         <div className="section-head sans-section">Бросок умения</div>
         <div className="two">
           <label className="field"><span className="sans-caption secondary">Умение, %</span>
-            <input className="input sans-value" type="number" inputMode="numeric" min={0} max={95} step={5} value={skill}
-              onChange={e => { setSkill(Math.max(0, Math.min(95, +e.target.value || 0))); setRoll(null); }} /></label>
+            <NumField value={skill} min={0} max={95} onChange={v => { setSkill(v); setRoll(null); }} /></label>
           <label className="field"><span className="sans-caption secondary">Аспект умения</span>
             <select className="input sans-label" value={skillAspect} onChange={e => { setSkillAspect(e.target.value as AspectId | ''); setRoll(null); }}>
               <option value="">— нет —</option>
@@ -139,9 +149,9 @@ export function EngineCheck() {
         <div className="section-head sans-section">Противостояние</div>
         <div className="two">
           <label className="field"><span className="sans-caption secondary">Нападающий, %</span>
-            <input className="input sans-value" type="number" inputMode="numeric" value={att} onChange={e => { setAtt(Math.max(10, Math.min(95, +e.target.value || 10))); setDuel(null); }} /></label>
+            <NumField value={att} min={10} max={95} onChange={v => { setAtt(v); setDuel(null); }} /></label>
           <label className="field"><span className="sans-caption secondary">Защитник, %</span>
-            <input className="input sans-value" type="number" inputMode="numeric" value={def} onChange={e => { setDef(Math.max(10, Math.min(95, +e.target.value || 10))); setDuel(null); }} /></label>
+            <NumField value={def} min={10} max={95} onChange={v => { setDef(v); setDuel(null); }} /></label>
         </div>
         <div className="card">
           <div className="row"><span className="grow sans-label">Шанс нападающего</span><span className="sans-value">{(chance.win * 100).toFixed(2)}%</span></div>

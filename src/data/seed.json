@@ -1,0 +1,240 @@
+{
+  "schemaVersion": 1,
+  "aspects": [
+    {
+      "id": "edge",
+      "name": "Грань",
+      "symbol": "⸸",
+      "contrary": "heart",
+      "soulPart": [
+        "Эреб",
+        "Решимость"
+      ]
+    },
+    {
+      "id": "heart",
+      "name": "Сердце",
+      "symbol": "♡",
+      "contrary": "edge",
+      "soulPart": [
+        "Хор"
+      ]
+    },
+    {
+      "id": "forge",
+      "name": "Кузня",
+      "symbol": "🜂",
+      "contrary": "scale",
+      "soulPart": [
+        "Решимость"
+      ]
+    },
+    {
+      "id": "scale",
+      "name": "Чешуя",
+      "symbol": "⌘",
+      "contrary": "forge",
+      "soulPart": [
+        "Здоровье"
+      ]
+    },
+    {
+      "id": "lantern",
+      "name": "Лампада",
+      "symbol": "✹",
+      "contrary": "nectar",
+      "soulPart": [
+        "Фост"
+      ]
+    },
+    {
+      "id": "nectar",
+      "name": "Нектар",
+      "symbol": "⬡",
+      "contrary": "lantern",
+      "soulPart": [
+        "Здоровье"
+      ]
+    },
+    {
+      "id": "moth",
+      "name": "Мотылёк",
+      "symbol": "⋈",
+      "contrary": "rose",
+      "soulPart": [
+        "Трист"
+      ]
+    },
+    {
+      "id": "rose",
+      "name": "Роза",
+      "symbol": "✣",
+      "contrary": "moth",
+      "soulPart": [
+        "Фет"
+      ]
+    },
+    {
+      "id": "grail",
+      "name": "Чаша",
+      "symbol": "∪",
+      "contrary": "winter",
+      "soulPart": [
+        "Эреб"
+      ]
+    },
+    {
+      "id": "winter",
+      "name": "Зима",
+      "symbol": "⛬",
+      "contrary": "grail",
+      "soulPart": [
+        "Вист"
+      ]
+    },
+    {
+      "id": "sky",
+      "name": "Небо",
+      "symbol": "⦶",
+      "contrary": "moon",
+      "soulPart": [
+        "Фост"
+      ]
+    },
+    {
+      "id": "moon",
+      "name": "Луна",
+      "symbol": "☽",
+      "contrary": "sky",
+      "soulPart": [
+        "Трист"
+      ]
+    },
+    {
+      "id": "knock",
+      "name": "Стук",
+      "symbol": "⚿",
+      "contrary": null,
+      "soulPart": [
+        "Шапт"
+      ]
+    }
+  ],
+  "soulParts": [
+    "Хор",
+    "Эреб",
+    "Фет",
+    "Здоровье",
+    "Решимость",
+    "Фост",
+    "Шапт",
+    "Трист",
+    "Вист"
+  ],
+  "levels": [
+    {
+      "id": "novice",
+      "name": "Новичок",
+      "aspectSum": 30
+    },
+    {
+      "id": "regular",
+      "name": "Завсегдатай",
+      "aspectSum": 40
+    },
+    {
+      "id": "veteran",
+      "name": "Опытный",
+      "aspectSum": 50
+    }
+  ],
+  "temptations": [
+    {
+      "name": "Преображение",
+      "aspects": [
+        "forge",
+        "heart"
+      ]
+    },
+    {
+      "name": "Свобода",
+      "aspects": [
+        "moth",
+        "rose"
+      ]
+    },
+    {
+      "name": "Чувственность",
+      "aspects": [
+        "grail",
+        "nectar"
+      ]
+    },
+    {
+      "name": "Истина",
+      "aspects": [
+        "lantern",
+        "knock"
+      ]
+    },
+    {
+      "name": "Память",
+      "aspects": [
+        "scale",
+        "winter"
+      ]
+    },
+    {
+      "name": "Могущество",
+      "aspects": [
+        "edge"
+      ]
+    },
+    {
+      "name": "Совершенство",
+      "aspects": [
+        "sky"
+      ]
+    },
+    {
+      "name": "Тайна",
+      "aspects": [
+        "moon"
+      ]
+    }
+  ],
+  "occultTiers": [
+    {
+      "tier": 1,
+      "threshold": 4,
+      "artCeiling": 20,
+      "bookRoll": 20
+    },
+    {
+      "tier": 2,
+      "threshold": 8,
+      "artCeiling": 40,
+      "bookRoll": 10
+    },
+    {
+      "tier": 3,
+      "threshold": 12,
+      "artCeiling": 60,
+      "bookRoll": 0
+    },
+    {
+      "tier": 4,
+      "threshold": 16,
+      "artCeiling": 80,
+      "bookRoll": -10
+    }
+  ],
+  "limits": {
+    "targetMin": 10,
+    "targetMax": 95,
+    "modCap": 40,
+    "aspectBaseMax": 11,
+    "overSaturation": 12,
+    "soulCrackCells": 3
+  }
+}

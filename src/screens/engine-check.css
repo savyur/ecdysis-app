@@ -1,0 +1,35 @@
+/* Временный экран «Расчёт». Стили только внутри .page. */
+.page { max-width: 1280px; margin: 0 auto; padding: calc(var(--safe-top) + var(--space-16)) var(--space-16) calc(var(--safe-bottom) + var(--space-24)); display: flex; flex-direction: column; gap: var(--space-24); }
+.page .section-head { height: 32px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid var(--border-inverse); }
+.page .group { display: flex; flex-direction: column; gap: var(--space-8); }
+.page .card { background: var(--bg-card); border: 1px solid var(--border-default); }
+.page .row { min-height: 44px; display: flex; align-items: center; gap: var(--space-8); padding: 0 var(--space-12); border-bottom: 1px solid var(--border-default); }
+.page .row:last-child { border-bottom: 0; }
+.page .row .grow { flex: 1; min-width: 0; }
+.page .secondary { color: var(--text-secondary); }
+.page .signal { color: var(--text-signal); }
+.page .num { width: 48px; text-align: right; }
+
+.page .btn { height: 44px; padding: 0 var(--space-12); border: 1px solid var(--border-strong); background: transparent; border-radius: var(--radius-0); cursor: pointer; }
+.page .btn:active { background: var(--fill-pressed); }
+.page .btn.primary { background: var(--fill-inverse); border-color: var(--border-inverse); color: var(--on-inverse); }
+.page .btn.primary:active { background: var(--fill-inverse-pressed); }
+.page .btn:disabled { opacity: 0.4; }
+.page .icon-btn { width: 44px; height: 44px; border: 1px solid var(--border-strong); background: transparent; cursor: pointer; }
+.page .icon-btn:active { background: var(--fill-pressed); }
+.page .input { color: var(--text-primary); height: 44px; width: 100%; padding: 0 var(--space-12); border: 1px solid var(--border-strong); background: var(--bg-card); border-radius: var(--radius-0); }
+.page .input:focus { outline: 1px solid var(--border-focus); }
+.page .chips { display: flex; flex-wrap: wrap; gap: var(--space-8); }
+.page .chip { height: 32px; padding: 0 var(--space-8); border: 1px solid var(--border-default); background: transparent; cursor: pointer; }
+.page .chip.selected { background: var(--fill-band); border-color: var(--border-strong); }
+.page .badge { height: 20px; padding: 0 var(--space-4); display: inline-flex; align-items: center; border: 1px solid var(--border-default); }
+.page .badge.minus { border-color: var(--border-signal); color: var(--text-signal); }
+.page .pip { width: 16px; height: 16px; border-radius: var(--radius-full); display: inline-block; border: 1px solid var(--border-aspect); }
+.page .actions { display: flex; gap: var(--space-16); }
+.page .actions > * { flex: 1; }
+.page .result { padding: var(--space-12); display: flex; flex-direction: column; gap: var(--space-4); }
+.page .result.crit-success { background: var(--fill-inverse); color: var(--on-inverse); }
+.page .field { display: flex; flex-direction: column; gap: var(--space-4); }
+.page .two { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-8); }
+.page select.input { appearance: none; background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%); background-position: calc(100% - 18px) 50%, calc(100% - 12px) 50%; background-size: 6px 6px; background-repeat: no-repeat; padding-right: var(--space-32); }
+.page select.input option { background: var(--bg-card); color: var(--text-primary); }

@@ -1,4 +1,5 @@
 // Временный экран «Расчёт»: проверка движка на телефоне до сборки экранов из Figma.
+import './engine-check.css';
 import { useEffect, useState } from 'react';
 import seed from '../data/seed.json';
 import type { AspectId } from '../data/types';

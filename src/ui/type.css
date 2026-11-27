@@ -1,0 +1,37 @@
+/* Шрифты и стили текста. Источник: Дизайн-система → «Шрифты» (телефон). */
+@import '@fontsource/jost/cyrillic-400.css';
+@import '@fontsource/jost/cyrillic-500.css';
+@import '@fontsource/jost/400.css';
+@import '@fontsource/jost/500.css';
+@import '@fontsource/literata/cyrillic-400.css';
+@import '@fontsource/literata/cyrillic-400-italic.css';
+
+:root {
+  --font-sans: 'Jost', sans-serif;
+  --font-serif: 'Literata', serif;
+  --font-display-size: 40px; --font-display-line: 44px;
+  --font-title-size: 24px;   --font-title-line: 28px;
+  --font-stat-size: 20px;    --font-stat-line: 24px;
+  --font-value-size: 16px;   --font-value-line: 24px;
+  --font-section-size: 12px; --font-section-line: 16px;
+  --font-button-size: 12px;  --font-button-line: 16px;
+  --font-badge-size: 12px;   --font-badge-line: 16px;
+  --font-label-size: 16px;   --font-label-line: 24px;
+  --font-caption-size: 14px; --font-caption-line: 20px;
+  --font-body-size: 16px;    --font-body-line: 24px;
+}
+@media (min-width: 1024px) {
+  :root { --font-display-size: 48px; --font-display-line: 52px; --font-title-size: 28px; --font-title-line: 32px; }
+}
+
+.sans-display { font: 500 var(--font-display-size)/var(--font-display-line) var(--font-sans); }
+.sans-title   { font: 500 var(--font-title-size)/var(--font-title-line) var(--font-sans); }
+.sans-stat    { font: 500 var(--font-stat-size)/var(--font-stat-line) var(--font-sans); font-variant-numeric: tabular-nums; }
+.sans-value   { font: 400 var(--font-value-size)/var(--font-value-line) var(--font-sans); font-variant-numeric: tabular-nums; }
+.sans-section { font: 500 var(--font-section-size)/var(--font-section-line) var(--font-sans); text-transform: uppercase; letter-spacing: 0.06em; }
+.sans-button  { font: 500 var(--font-button-size)/var(--font-button-line) var(--font-sans); text-transform: uppercase; letter-spacing: 0.04em; }
+.sans-badge   { font: 500 var(--font-badge-size)/var(--font-badge-line) var(--font-sans); font-variant-numeric: tabular-nums; }
+.sans-label   { font: 400 var(--font-label-size)/var(--font-label-line) var(--font-sans); }
+.sans-caption { font: 400 var(--font-caption-size)/var(--font-caption-line) var(--font-sans); }
+.serif-body   { font: 400 var(--font-body-size)/var(--font-body-line) var(--font-serif); }
+.serif-body-italic { font: italic 400 var(--font-body-size)/var(--font-body-line) var(--font-serif); }

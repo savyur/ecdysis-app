@@ -134,3 +134,20 @@
 .input-field.error input { border-color: var(--border-signal); }
 .input-field .helper { color: var(--text-secondary); }
 .input-field.error .helper { color: var(--text-signal); }
+
+/* Свободный бросок: своя минимальная высота 328 на оба шага */
+.roll-sheet.free { min-height: 328px; }
+.free-calc, .free-result { padding-top: 0; }
+.free-calc .notation, .free-result > .sans-display { color: var(--text-primary); }
+.free-calc .params { display: flex; gap: var(--space-8); }
+.free-calc .field { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: var(--space-4); color: var(--text-secondary); }
+.free-calc .field .stepper { width: 100%; }
+.free-result .dice { display: flex; flex-wrap: wrap; gap: var(--space-8); align-items: center; }
+.free-result .mod { color: var(--text-secondary); }
+
+/* Stepper: − N +, значение во фрейме с разделителями */
+.stepper { height: 44px; display: flex; align-items: center; background: var(--bg-page); }
+.stepper .value { flex: 1; min-width: 56px; padding: 0 var(--space-4); text-align: center; border-left: 1px solid var(--border-default); border-right: 1px solid var(--border-default); color: var(--text-primary); }
+
+/* Chip: плашка-значение 32, не нажимается */
+.chip { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; background: var(--bg-page); border: 1px solid var(--border-default); color: var(--text-primary); }

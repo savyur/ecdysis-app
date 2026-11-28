@@ -43,7 +43,9 @@ export interface Effect {
   duration: Duration; source: string; condition?: string;
 }
 
-export interface ItemInstance { id: string; refId?: string; custom?: { name: string; type: string; aspects: Partial<Record<AspectId, number>> }; usesLeft?: number; }
+export interface ItemInstance { id: string; refId?: string; custom?: { name: string; type: string; aspects: Partial<Record<AspectId, number>> }; usesLeft?: number;
+  ammo?: { cur: number; max: number };                   // оружие с патронами (28 ноября)
+  equipped?: boolean; }                                  // броня надета: штраф снаряжения действует
 
 export interface RollLogEntry {
   id: string; characterId: string; at: string; hidden: boolean; // скрытые видит только мастер
@@ -51,6 +53,25 @@ export interface RollLogEntry {
   result: number; step: 'crit-success'|'success'|'fail'|'crit-fail';
 }
 
+/** @deprecated с 28 ноября — см. BookRef */
 export interface Book { id: string; aspect: AspectId; threshold: number; language: string; skillId: string; }
 export interface OccultSkillRef { id: string; name: string; arts: [string, string]; aspects: [AspectId, AspectId]; starterBook: string; }
 export interface Language { id: string; name: string; kind: 'open'|'ancient'|'unseen'; aspects?: [AspectId, AspectId]; }
+// Каталоги справочников (28 ноября). Один файл на категорию: data/catalog/<kind>.json
+export type CatalogKind = 'aspects'|'soul-parts'|'skills'|'occult'|'languages'|'books'|'substances'|'tools'|'weapons'|'armor'|'memories'|'taints'|'ailments'|'disorders'|'manifestations';
+export interface CatalogFile<T> { schemaVersion: number; kind: CatalogKind; entries: T[]; }
+export interface CatalogBase { id: string; name: string; description: string; hidden?: boolean; source?: string; } // source — файл хранилища
+export type AspectValues = Partial<Record<AspectId, number>>;
+
+export interface AspectRef extends CatalogBase { aspectId: AspectId; symbol: string; contrary?: AspectId; }
+export interface SoulPartRef extends CatalogBase { part: SoulPart; aspects: AspectId[]; }
+export interface BookRef extends CatalogBase { aspect: AspectId; threshold: number; language?: string; skillId?: string; } // threshold чётный, ≥ 4
+export interface SubstanceRef extends CatalogBase { type: 'substance'|'ingredient'|'plant'|'candle'; aspects: AspectValues; craft?: string; silent?: boolean; } // silent — Нигилит
+export interface ToolRef extends CatalogBase { aspects: AspectValues; uses: number | 'reusable'; }
+export interface WeaponRef extends CatalogBase { skill: string; damage: string; range: string; shots: [number, number]; fire: 'none'|'burst'|'burst-only'; magazine?: number; } // damage «1d10», shots [1,3]
+export interface ArmorRef extends CatalogBase { value: number; covers: 'body'|'head'|'melee'; penalty?: { skills: string[]; value: -10|-20 }; }
+export interface MemoryRef extends CatalogBase { aspects: AspectValues; }
+export interface TaintRef extends CatalogBase { aspects: AspectValues; parts: [SoulPart, SoulPart]; ailments: string[]; cure: number; }
+export interface AilmentRef extends CatalogBase { aspect: AspectId; part: SoulPart; mask: string; effect: string; cure: number; } // cure 5–9
+export interface DisorderRef extends CatalogBase { category: string; part: SoulPart; flare: string; }
+export interface ManifestationRef extends CatalogBase { part: SoulPart; effects: string[]; }

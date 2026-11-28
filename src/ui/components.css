@@ -151,3 +151,22 @@
 
 /* Chip: плашка-значение 32, не нажимается */
 .chip { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; background: var(--bg-page); border: 1px solid var(--border-default); color: var(--text-primary); }
+
+/* RollSheet mode=attack: одна высота 515 на все шаги */
+.roll-sheet.attack { min-height: 515px; }
+.weapon-pick { flex: 1; display: flex; flex-direction: column; gap: var(--space-8); }
+.weapon-pick .label, .weapon-pick .empty { color: var(--text-secondary); }
+.weapons { max-height: 152px; overflow-y: auto; border: 1px solid var(--border-default); display: flex; flex-direction: column; }
+.item-row { min-height: 44px; flex-shrink: 0; display: flex; align-items: center; gap: var(--space-8); padding: 0 var(--space-12); border: 0; border-top: 1px solid var(--border-default); background: none; width: 100%; cursor: pointer; text-align: left; color: var(--text-primary); }
+.item-row:first-child { border-top: 0; }
+.item-row:active { background: var(--fill-pressed); }
+.item-row.selected { background: var(--fill-band); outline: 1px solid var(--border-strong); outline-offset: -1px; }
+.item-row .name { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.item-row .stat { color: var(--text-secondary); }
+.calc.damage { gap: var(--space-16); }
+.damage-result { display: flex; flex-direction: column; gap: var(--space-8); padding: var(--space-8) 0; }
+.damage-result .total { color: var(--text-primary); }
+.damage-result .against { color: var(--text-secondary); }
+.damage-result .dice { display: flex; gap: var(--space-8); }
+.armor-row { height: 44px; display: flex; align-items: center; gap: var(--space-8); color: var(--text-primary); }
+.armor-row > span { flex: 1; }

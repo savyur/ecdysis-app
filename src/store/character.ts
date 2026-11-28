@@ -1,12 +1,20 @@
 // Хранение персонажа на телефоне. Пока localStorage; IndexedDB и очередь правок — следующим шагом.
 import { useCallback, useEffect, useState } from 'react';
 import type { Character } from '../data/types';
-import { demoCharacter } from './demo';
+import { demoCharacter, DEMO_ITEMS } from './demo';
 
 const KEY = 'ecdysis.character.v1';
 
 function load(): Character {
-  try { const s = localStorage.getItem(KEY); if (s) return JSON.parse(s); } catch { /* нет хранилища */ }
+  try {
+    const s = localStorage.getItem(KEY);
+    if (s) {
+      const c: Character = JSON.parse(s);
+      // Демо из прежней версии без оружия: добавить оружие.
+      if (c.id === 'demo' && c.items.length === 0) c.items = DEMO_ITEMS.map(i => ({ ...i }));
+      return c;
+    }
+  } catch { /* нет хранилища */ }
   return demoCharacter();
 }
 

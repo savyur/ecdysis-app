@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { damage, diceText, rollDiceOf } from '../src/engine/damage';
+import { damage, diceText, rollDiceOf, effectiveArmor } from '../src/engine/damage';
 import { UNARMED, WEAPON_BY_ID } from '../src/data/weapons';
 
 describe('Урон', () => {
@@ -24,5 +24,14 @@ describe('Урон', () => {
   });
   it('Кубы в пределах граней', () => {
     for (let i = 0; i < 300; i++) for (const v of rollDiceOf({ count: 2, sides: 10, mod: 0 })) { expect(v).toBeGreaterThanOrEqual(1); expect(v).toBeLessThanOrEqual(10); }
+  });
+});
+
+describe('Точное попадание', () => {
+  it('Броня цели не действует', () => {
+    expect(effectiveArmor('precise', 5)).toBe(0);
+    expect(effectiveArmor('normal', 5)).toBe(5);
+    expect(effectiveArmor('aim', 5)).toBe(5);
+    expect(damage(WEAPON_BY_ID.revolver.damage, [7], effectiveArmor('precise', 5)).total).toBe(7);
   });
 });

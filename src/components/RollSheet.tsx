@@ -1,6 +1,6 @@
 // Шторка броска: подготовка → (ввод вручную) → результат → (урон у атаки). Имена — как в Figma (RollSheet).
 import { useEffect, useState } from 'react';
-import { damage, diceText, rollDiceOf, hits, ATTACK_KIND, type AttackKind } from '../engine/damage';
+import { damage, diceText, rollDiceOf, hits, effectiveArmor, ATTACK_KIND, type AttackKind } from '../engine/damage';
 import { ATTACK_SKILLS, UNARMED, WEAPON_BY_ID, type Weapon } from '../data/weapons';
 import { Stepper, Chip } from './FreeRollSheet';
 import type { Character } from '../data/types';
@@ -110,7 +110,9 @@ export function RollSheet({ c, subject, onClose, onResult }: {
     saveLast(subject.id, weapon.id);
     setDmgDice(rollDiceOf(weapon.damage)); setArmor(0); setMode('damage');
   };
-  const dmg = weapon && mode === 'damage' ? damage(weapon.damage, dmgDice, armor, s === 'crit-success') : null;
+  // Точное попадание при успехе: броня цели не действует (26. Бой).
+  const ignoreArmor = kind === 'precise';
+  const dmg = weapon && mode === 'damage' ? damage(weapon.damage, dmgDice, effectiveArmor(kind, armor), s === 'crit-success') : null;
   const markNote = s === 'crit-fail' && attack ? 'Осечка или оружие выпало — решает мастер. Отметка поставлена: +5% между вылазками' : 'Отметка поставлена: +5% между вылазками';
 
   return (
@@ -204,12 +206,12 @@ export function RollSheet({ c, subject, onClose, onResult }: {
           <div className="calc damage">
             <div className="damage-result">
               <span className="sans-display tnum total">{dmg.total}</span>
-              <span className="sans-label against tnum">{diceText(weapon.damage)} = {dmg.raw}{dmg.max ? ' (максимум)' : ''}{armor ? ` · броня −${armor}` : ''}{dmg.raw - armor < 1 ? ' · не меньше 1' : ''}</span>
+              <span className="sans-label against tnum">{diceText(weapon.damage)} = {dmg.raw}{dmg.max ? ' (максимум)' : ''}{dmg.armor ? ` · броня −${dmg.armor}` : ''}{ignoreArmor ? ' · точное: броня не действует' : ''}{dmg.raw - dmg.armor < 1 ? ' · не меньше 1' : ''}</span>
               <div className="dice">{dmg.dice.map((d, i) => <Chip key={i} value={d} />)}</div>
             </div>
             <div className="armor-row">
               <span className="sans-label">Броня цели</span>
-              <Stepper label="Броня цели" value={armor} min={0} max={ARMOR_MAX} onChange={setArmor} />
+              <Stepper label="Броня цели" value={ignoreArmor ? 0 : armor} min={0} max={ignoreArmor ? 0 : ARMOR_MAX} onChange={setArmor} />
             </div>
           </div>
           <div className="actions">

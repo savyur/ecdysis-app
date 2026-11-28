@@ -21,6 +21,9 @@ export const WEAPONS: Weapon[] = [
   { id: 'carbine', name: 'Карабин', damage: { count: 1, sides: 12, mod: 0 }, skills: RANGED },
   { id: 'rifle', name: 'Винтовка', damage: { count: 1, sides: 12, mod: 2 }, skills: RANGED },
   { id: 'shotgun', name: 'Дробовик', damage: { count: 2, sides: 10, mod: 0 }, skills: RANGED },
+  { id: 'smg', name: 'Пистолет-пулемёт', damage: { count: 1, sides: 10, mod: 0 }, skills: RANGED },
+  { id: 'bar', name: 'Автоматическая винтовка', damage: { count: 1, sides: 12, mod: 2 }, skills: RANGED },
+  { id: 'lmg', name: 'Ручной пулемёт', damage: { count: 1, sides: 12, mod: 2 }, skills: RANGED },
 ];
 export const WEAPON_BY_ID: Record<string, Weapon> = Object.fromEntries([UNARMED, ...WEAPONS].map(w => [w.id, w]));
 

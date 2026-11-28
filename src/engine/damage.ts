@@ -29,3 +29,6 @@ export const ATTACK_KIND: Record<AttackKind, { label: string; source?: string; v
   aim: { label: 'Прицел', source: 'Прицел', value: 20 },
   precise: { label: 'Точное', source: 'Точное', value: -20 },
 };
+
+/** Броня, которая действует: Точное попадание при успехе снимает броню цели (26. Бой). */
+export const effectiveArmor = (kind: AttackKind, armor: number) => (kind === 'precise' ? 0 : armor);

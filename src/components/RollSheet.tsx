@@ -6,6 +6,7 @@ import { Stepper, Chip } from './FreeRollSheet';
 import type { Character } from '../data/types';
 import { d100, step, isSuccess, target, modSum, type Mod, type Step } from '../engine/roll';
 import { skillMods } from '../engine/character';
+import { burnoutMod } from '../engine/will';
 import { Icon } from '../ui/icons';
 import { signed, aspectName } from './sheet';
 import { SKILL_BY_ID } from '../data/skills';
@@ -89,7 +90,7 @@ export function RollSheet({ c, subject, onClose, onResult }: {
   const k = ATTACK_KIND[kind];
   const kindMod: Mod | undefined = attack && k.source ? { source: k.source, value: k.value } : undefined;
   const situational: Mod[] = [...(kindMod ? [kindMod] : []), ...(situation ? [{ source: 'Ситуация', value: situation }] : [])];
-  const baseMods = subject.kind === 'skill' ? skillMods(c, subject.id) : [];
+  const baseMods = subject.kind === 'skill' ? skillMods(c, subject.id) : [burnoutMod(c)].filter((m): m is Mod => !!m);
   const sourceMods: Mod[] = baseMods.map(m => ({ source: m.source === 'aspect' && ref ? aspectName(ref.aspect) : sourceName(m.source), value: m.value }));
   const shown: Mod[] = [...sourceMods, ...situational];
   const unlocked = !!ref && c.aspects[ref.aspect].cur > c.aspects[ref.aspect].base;

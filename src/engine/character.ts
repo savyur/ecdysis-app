@@ -3,6 +3,7 @@ import type { Character, Stat, Effect } from '../data/types';
 import { SKILL_BY_ID } from '../data/skills';
 import { aspectMod } from './aspects';
 import { target, type Mod } from './roll';
+import { burnoutMod } from './will';
 
 export const STATS: Stat[] = ['СИЛ', 'ТЕЛ', 'ЛОВ', 'ИНТ', 'ВОЛ', 'ХАР'];
 
@@ -50,12 +51,13 @@ export function endSortie(c: Character): Character {
   };
 }
 
-/** Модификаторы к умению: Аспект + воздействия-модификаторы на это умение или его Аспект. */
+/** Модификаторы к умению: Аспект + воздействия-модификаторы на это умение или его Аспект + выгорание. */
 export function skillMods(c: Character, skillId: string, extra: Mod[] = []): Mod[] {
   const ref = SKILL_BY_ID[skillId];
   const mods: Mod[] = [...extra];
   if (ref) { const v = aspectMod(c.aspects, ref.aspect); if (v) mods.push({ source: 'aspect', value: v }); }
   for (const e of c.effects) if (e.kind === 'modifier' && e.value && (e.target === skillId || (ref && e.target === ref.aspect))) mods.push({ source: e.source, value: e.value });
+  const b = burnoutMod(c); if (b) mods.push(b);
   return mods;
 }
 

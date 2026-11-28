@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { weaponModes, modeAvailable, ammoCost, maxShots, spendAmmo, reload, canReload, volley, rollVolley, suppression, armorAgainst, gearPenalty, defenseCritFail, type ArmorPiece } from '../src/engine/combat';
+import { weaponModes, modeAvailable, ammoCost, maxShots, spendAmmo, reload, canReload, volley, rollVolley, suppression, armorAgainst, gearPenalty, defenseCritFail, wearArmor, armorTakesHit, type ArmorPiece } from '../src/engine/combat';
+import { ARMOR_BY_ID } from '../src/data/armor';
 import { WEAPON_BY_ID } from '../src/data/weapons';
 
 const W = WEAPON_BY_ID;
@@ -93,5 +94,41 @@ describe('Броня и защита', () => {
   it('Крит. провал защиты — атака попадает с максимумом', () => {
     expect(defenseCritFail('crit-fail')).toBe(true);
     expect(defenseCritFail('crit-success')).toBe(false);
+  });
+});
+
+describe('Износ брони', () => {
+  const vest = { value: 2, covers: 'body' as const, usesLeft: 4 };
+  const plate = { value: 3, covers: 'body' as const, usesLeft: 1, penalty: { skills: ['dodge'], value: -10 as const } };
+  const helmet = { value: 1, covers: 'head' as const, usesLeft: 3 };
+  it('Попадание снимает 1 прочности с сильнейшего', () => {
+    const r = wearArmor([vest, plate]);
+    expect(r.index).toBe(1); expect(r.worn[1].usesLeft).toBe(0); expect(r.worn[0].usesLeft).toBe(4);
+  });
+  it('Прочность 0 — разрушен: значение 0, урон принимает следующий', () => {
+    const broken = wearArmor([vest, plate]).worn;
+    expect(armorAgainst(broken)).toBe(2);
+    const next = wearArmor(broken);
+    expect(next.index).toBe(0); expect(next.worn[0].usesLeft).toBe(3);
+  });
+  it('Штраф снаряжения остаётся у разрушенной брони', () => {
+    const broken = wearArmor([plate]).worn;
+    expect(gearPenalty(broken, 'dodge')).toEqual({ source: 'снаряжение', value: -10 });
+  });
+  it('Каска изнашивается только при попадании в голову', () => {
+    expect(wearArmor([helmet]).index).toBe(-1);
+    expect(wearArmor([helmet], { head: true }).worn[0].usesLeft).toBe(2);
+  });
+  it('Всё разрушено — нечем принять', () => {
+    expect(wearArmor([{ ...vest, usesLeft: 0 }]).index).toBe(-1);
+    expect(armorAgainst([{ ...vest, usesLeft: 0 }])).toBe(0);
+  });
+  it('Точное попадание прочность не снимает', () => {
+    expect(armorTakesHit('precise')).toBe(false);
+    expect(armorTakesHit('normal')).toBe(true);
+  });
+  it('Прочность из таблицы', () => {
+    expect(ARMOR_BY_ID['armor-knight'].uses).toBe(8);
+    expect(ARMOR_BY_ID['armor-police-vest'].uses).toBe(4);
   });
 });

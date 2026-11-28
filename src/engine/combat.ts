@@ -34,9 +34,20 @@ export function maxShots(w: FireWeapon, ammo?: number): number {
   return Math.max(1, Math.min(w.shots[1], ammo ?? Infinity));
 }
 
-/** Патроны списываются при каждом выстреле, и при промахе тоже (предложение в «Не определено»). */
-export const spendAmmo = (ammo: { cur: number; max: number }, cost: number) => ({ ...ammo, cur: Math.max(0, ammo.cur - cost) });
-export const reload = (ammo: { cur: number; max: number }) => ({ ...ammo, cur: ammo.max });
+/** Патроны оружия: в оружии (cur), магазин (max), запас (reserve). Калибров нет (Пётр, 28 ноября). */
+export interface Ammo { cur: number; max: number; reserve: number }
+
+/** Патроны списываются из оружия при любом результате атаки. */
+export const spendAmmo = (ammo: Ammo, cost: number): Ammo => ({ ...ammo, cur: Math.max(0, ammo.cur - cost) });
+
+/** «Перезарядить» доступно, если есть запас и магазин не полон. */
+export const canReload = (ammo: Ammo) => ammo.reserve > 0 && ammo.cur < ammo.max;
+
+/** Перезарядка — одно действие: из запаса в оружие, до размера магазина. */
+export function reload(ammo: Ammo): Ammo {
+  const take = Math.min(ammo.max - ammo.cur, ammo.reserve);
+  return { ...ammo, cur: ammo.cur + Math.max(0, take), reserve: ammo.reserve - Math.max(0, take) };
+}
 
 export interface Volley { hits: Damage[]; total: number }
 

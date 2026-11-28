@@ -30,10 +30,12 @@ export function canRoll(skill: number, mods: Mod[], unlocked = false): boolean {
   return strongestPerSource(mods).some(m => m.value >= 20);
 }
 
-/** Итоговая цель или null, если бросать нельзя. */
+/** Итоговая цель или null, если бросать нельзя. Сумма умения и модификаторов 0 или ниже — бросок невозможен. */
 export function target(skill: number, mods: Mod[] = [], unlocked = false): number | null {
   if (!canRoll(skill, mods, unlocked)) return null;
-  return clamp(skill + modSum(mods), TARGET_MIN, TARGET_MAX);
+  const sum = skill + modSum(mods);
+  if (sum <= 0) return null;
+  return clamp(sum, TARGET_MIN, TARGET_MAX);
 }
 
 const isDouble = (r: number) => r >= 11 && r <= 99 && r % 11 === 0;

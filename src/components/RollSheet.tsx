@@ -20,11 +20,11 @@ export function Tag({ s }: { s: Step }) {
   return <span className={`tag sans-badge ${s}`}>{STEP_LABEL[s]}</span>;
 }
 
-export function Segment({ value, onChange }: { value: number; onChange: (v: number) => void }) {
+export function Segment({ value, onChange, isDisabled }: { value: number; onChange: (v: number) => void; isDisabled?: (v: number) => boolean }) {
   return (
     <div className="segment" role="radiogroup" aria-label="Ситуация">
       {SITUATION.map(v => (
-        <button key={v} role="radio" aria-checked={v === value} className={`option sans-value tnum${v === value ? ' selected' : ''}`} onClick={() => onChange(v)}>{signed(v)}</button>
+        <button key={v} role="radio" aria-checked={v === value} disabled={v !== value && isDisabled?.(v)} className={`option sans-value tnum${v === value ? ' selected' : ''}`} onClick={() => onChange(v)}>{signed(v)}</button>
       ))}
     </div>
   );
@@ -94,6 +94,13 @@ export function RollSheet({ c, subject, onClose, onResult }: {
   const shown: Mod[] = [...sourceMods, ...situational];
   const unlocked = !!ref && c.aspects[ref.aspect].cur > c.aspects[ref.aspect].base;
   const tgt = target(subject.value, [...baseMods, ...situational], unlocked);
+  // Сумма умения и модификаторов 0 или ниже — бросок невозможен (Ядро → «Цель»).
+  const blocks = (sit: number, kd: AttackKind = kind) => {
+    const km = attack && ATTACK_KIND[kd].source ? [{ source: ATTACK_KIND[kd].source!, value: ATTACK_KIND[kd].value }] : [];
+    const all = [...baseMods, ...km, ...(sit ? [{ source: 'Ситуация', value: sit }] : [])];
+    return subject.value + modSum(all) <= 0;
+  };
+  const floorHit = subject.value > 0 && blocks(situation);
   const label = attack ? subject.name : subject.kind === 'skill' ? 'Умение' : subject.id;
 
   const finish = (r: number) => {
@@ -133,18 +140,20 @@ export function RollSheet({ c, subject, onClose, onResult }: {
                   {tgt === null ? <span className="sans-title">Нельзя</span> : <><span className="sans-display">{tgt}</span><span className="sans-title">%</span></>}
                 </div>
                 <Formula base={subject.value} mods={sourceMods} label={label} situation={situation} kind={kindMod} />
-                {tgt === null && <span className="sans-label against">Нужно преимущество +20 или Аспект выше базы</span>}
+                {tgt === null && (floorHit
+                  ? <span className="warning sans-caption">Цель 0 или ниже — бросок невозможен</span>
+                  : <span className="sans-label against">Нужно преимущество +20 или Аспект выше базы</span>)}
               </div>
             </div>
             {attack && (
               <div className="segment" role="radiogroup" aria-label="Вид атаки">
                 {(Object.keys(ATTACK_KIND) as AttackKind[]).map(id => {
                   const a = ATTACK_KIND[id];
-                  return <button key={id} role="radio" aria-checked={id === kind} className={`option sans-value${id === kind ? ' selected' : ''}`} onClick={() => setKind(id)}>{a.label}{a.value ? ` ${signed(a.value)}` : ''}</button>;
+                  return <button key={id} role="radio" aria-checked={id === kind} disabled={id !== kind && blocks(situation, id)} className={`option sans-value${id === kind ? ' selected' : ''}`} onClick={() => setKind(id)}>{a.label}{a.value ? ` ${signed(a.value)}` : ''}</button>;
                 })}
               </div>
             )}
-            <Segment value={situation} onChange={setSituation} />
+            <Segment value={situation} onChange={setSituation} isDisabled={v => blocks(v)} />
           </div>
           <div className="actions">
             <button className="button sans-button" disabled={tgt === null} onClick={() => { setText(''); setMode('manual'); }}><Icon name="ui/edit" size={20} />Ввести вручную</button>

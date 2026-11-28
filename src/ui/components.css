@@ -170,3 +170,7 @@
 .damage-result .dice { display: flex; gap: var(--space-8); }
 .armor-row { height: 44px; display: flex; align-items: center; gap: var(--space-8); color: var(--text-primary); }
 .armor-row > span { flex: 1; }
+
+/* Option disabled: прозрачность 40%. Warning: сумма ≤ 0 */
+.option:disabled { opacity: 0.4; cursor: default; }
+.roll-sheet .warning { color: var(--text-signal); }

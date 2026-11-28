@@ -45,7 +45,7 @@ export interface Effect {
 
 export interface ItemInstance { id: string; refId?: string; custom?: { name: string; type: string; aspects: Partial<Record<AspectId, number>> }; usesLeft?: number;
   ammo?: { cur: number; max: number };                   // оружие с патронами (28 ноября)
-  equipped?: boolean; }                                  // броня надета: штраф снаряжения действует
+  equipped?: boolean; }                                  // броня надета: штраф снаряжения действует; прочность — usesLeft, 0 — разрушена
 
 export interface RollLogEntry {
   id: string; characterId: string; at: string; hidden: boolean; // скрытые видит только мастер
@@ -69,7 +69,7 @@ export interface BookRef extends CatalogBase { aspect: AspectId; threshold: numb
 export interface SubstanceRef extends CatalogBase { type: 'substance'|'ingredient'|'plant'|'candle'; aspects: AspectValues; craft?: string; silent?: boolean; } // silent — Нигилит
 export interface ToolRef extends CatalogBase { aspects: AspectValues; uses: number | 'reusable'; }
 export interface WeaponRef extends CatalogBase { skill: string; damage: string; range: string; shots: [number, number]; fire: 'none'|'burst'|'burst-only'; magazine?: number; } // damage «1d10», shots [1,3]
-export interface ArmorRef extends CatalogBase { value: number; covers: 'body'|'head'|'melee'; penalty?: { skills: string[]; value: -10|-20 }; }
+export interface ArmorRef extends CatalogBase { value: number; covers: 'body'|'head'|'melee'; penalty?: { skills: string[]; value: -10|-20 }; uses: number; } // прочность: попаданий до разрушения; остаток — ItemInstance.usesLeft
 export interface MemoryRef extends CatalogBase { aspects: AspectValues; }
 export interface TaintRef extends CatalogBase { aspects: AspectValues; parts: [SoulPart, SoulPart]; ailments: string[]; cure: number; }
 export interface AilmentRef extends CatalogBase { aspect: AspectId; part: SoulPart; mask: string; effect: string; cure: number; } // cure 5–9

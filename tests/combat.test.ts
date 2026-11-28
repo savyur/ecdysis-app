@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { weaponModes, modeAvailable, ammoCost, maxShots, spendAmmo, reload, volley, rollVolley, suppression, armorAgainst, gearPenalty, defenseCritFail, wearArmor, armorTakesHit, type ArmorPiece } from '../src/engine/combat';
+import { weaponModes, modeAvailable, ammoCost, maxShots, spendAmmo, reload, canReload, volley, rollVolley, suppression, armorAgainst, gearPenalty, defenseCritFail, wearArmor, armorTakesHit, type ArmorPiece } from '../src/engine/combat';
 import { ARMOR_BY_ID } from '../src/data/armor';
 import { WEAPON_BY_ID } from '../src/data/weapons';
 
@@ -28,9 +28,17 @@ describe('Режимы огня', () => {
   it('Выстрелов не больше максимума оружия и патронов', () => {
     expect(maxShots(W.pistol)).toBe(3); expect(maxShots(W.pistol, 2)).toBe(2); expect(maxShots(W.rifle)).toBe(1);
   });
-  it('Списание и перезарядка', () => {
-    expect(spendAmmo({ cur: 4, max: 20 }, 5)).toEqual({ cur: 0, max: 20 });
-    expect(reload({ cur: 0, max: 20 })).toEqual({ cur: 20, max: 20 });
+  it('Списание из оружия, запас не тронут', () => {
+    expect(spendAmmo({ cur: 4, max: 20, reserve: 10 }, 5)).toEqual({ cur: 0, max: 20, reserve: 10 });
+  });
+  it('Перезарядка: из запаса до размера магазина', () => {
+    expect(reload({ cur: 2, max: 6, reserve: 10 })).toEqual({ cur: 6, max: 6, reserve: 6 });
+    expect(reload({ cur: 0, max: 6, reserve: 3 })).toEqual({ cur: 3, max: 6, reserve: 0 });
+  });
+  it('Перезарядка недоступна: запас 0 или магазин полон', () => {
+    expect(canReload({ cur: 2, max: 6, reserve: 0 })).toBe(false);
+    expect(canReload({ cur: 6, max: 6, reserve: 5 })).toBe(false);
+    expect(canReload({ cur: 5, max: 6, reserve: 1 })).toBe(true);
   });
 });
 

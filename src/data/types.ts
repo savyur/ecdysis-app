@@ -44,7 +44,7 @@ export interface Effect {
 }
 
 export interface ItemInstance { id: string; refId?: string; custom?: { name: string; type: string; aspects: Partial<Record<AspectId, number>> }; usesLeft?: number;
-  ammo?: { cur: number; max: number };                   // оружие с патронами (28 ноября)
+  ammo?: { cur: number; max: number; reserve: number };  // оружие с патронами: в оружии, магазин, запас (28 ноября); калибров нет
   equipped?: boolean; }                                  // броня надета: штраф снаряжения действует; прочность — usesLeft, 0 — разрушена
 
 export interface RollLogEntry {

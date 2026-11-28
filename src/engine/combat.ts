@@ -71,18 +71,36 @@ export function suppression(s: Step): 'zone-penalty' | 'zone-closed' | 'none' | 
 }
 
 // Броня
-export interface ArmorPiece { value: number; covers: 'body' | 'head' | 'melee'; penalty?: { skills: string[]; value: -10 | -20 } }
+export interface ArmorPiece { value: number; covers: 'body' | 'head' | 'melee'; penalty?: { skills: string[]; value: -10 | -20 }; usesLeft?: number }
+export interface HitPlace { head?: boolean; melee?: boolean }
+
+const fits = (a: ArmorPiece, hit: HitPlace) => a.covers === 'body' || (a.covers === 'head' && !!hit.head) || (a.covers === 'melee' && !!hit.melee);
+/** Прочность 0 — предмет разрушен: значение 0. */
+const live = (a: ArmorPiece) => a.usesLeft === undefined || a.usesLeft > 0;
 
 /**
- * Броня персонажа против попадания. Несколько надетых — действует сильнейшая (правило одного источника, предложение);
- * каска — только голова, куртка — только нож и удар.
+ * Броня против попадания: сильнейший целый предмет из тех, что закрывают место попадания (Пётр, 28 ноября).
+ * Каска — только голова, куртка — только нож и удар.
  */
-export function armorAgainst(worn: ArmorPiece[], hit: { head?: boolean; melee?: boolean } = {}): number {
-  const fits = worn.filter(a => a.covers === 'body' || (a.covers === 'head' && hit.head) || (a.covers === 'melee' && hit.melee));
-  return fits.reduce((m, a) => Math.max(m, a.value), 0);
+export function armorAgainst(worn: ArmorPiece[], hit: HitPlace = {}): number {
+  return worn.filter(a => fits(a, hit) && live(a)).reduce((m, a) => Math.max(m, a.value), 0);
 }
 
-/** Штраф снаряжения к умению: модификатор источника «снаряжение», действует сильнейший. */
+/**
+ * Износ: попадание, которое приняла броня, снимает 1 прочности с сильнейшего целого предмета.
+ * Прочность 0 — разрушен; дальше урон принимает следующий по силе. Возвращает новый список и индекс задетого (−1 — нечем).
+ */
+export function wearArmor<T extends ArmorPiece>(worn: T[], hit: HitPlace = {}): { worn: T[]; index: number } {
+  let index = -1;
+  worn.forEach((a, i) => { if (fits(a, hit) && live(a) && (index < 0 || a.value > worn[index].value)) index = i; });
+  if (index < 0) return { worn, index };
+  return { worn: worn.map((a, i) => (i === index && a.usesLeft !== undefined ? { ...a, usesLeft: a.usesLeft - 1 } : a)), index };
+}
+
+/** Точное попадание при успехе броню не задевает и прочность не снимает. */
+export const armorTakesHit = (kind: 'normal' | 'aim' | 'precise') => kind !== 'precise';
+
+/** Штраф снаряжения к умению: источник «снаряжение», действует сильнейший. Остаётся у разрушенной брони, пока она надета. */
 export function gearPenalty(worn: ArmorPiece[], skill: string): { source: string; value: number } | null {
   const v = worn.filter(a => a.penalty?.skills.includes(skill)).reduce((m, a) => Math.min(m, a.penalty!.value), 0);
   return v ? { source: 'снаряжение', value: v } : null;
